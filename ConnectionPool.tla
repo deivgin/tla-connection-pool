@@ -1,42 +1,41 @@
 ---- MODULE ConnectionPool ----
 EXTENDS Naturals, Sequences
 CONSTANTS PoolSize, MaxPoolSize
-VARIABLE pool
+VARIABLE pool, nextId
+vars == <<pool, nextId>>
 
-Node == [idle: BOOLEAN]
+Node == [id: Nat, idle: BOOLEAN]
 
 TypeOk ==
     /\ pool \in Seq(Node)
+    /\ nextId \in Nat
+
+Init ==
+    /\ pool = [i \in 1..PoolSize |-> [id |-> i, idle |-> TRUE]]
+    /\ nextId = PoolSize + 1
 
 -------------------------
 
-RemoveAt(seq, i) ==
-    [j \in 1..(Len(seq)-1) |-> IF j < i THEN seq[j] ELSE seq[j + 1]]
-
 Open ==
     /\ Len(pool) < MaxPoolSize
-    /\ pool' = Append(pool, [idle |-> TRUE])
-
-Close ==
-    /\ Len(pool) > PoolSize
-    /\ \E i \in 1..Len(pool) :
-        /\ pool[i].idle = TRUE
-        /\ pool' = RemoveAt(pool, i)
+    /\ pool' = Append(pool, [id |-> nextId, idle |-> TRUE])
+    /\ nextId' = nextId + 1
 
 Borrow ==
     /\ \E i \in 1..Len(pool) :
         /\ pool[i].idle = TRUE
         /\ pool' = [pool EXCEPT ![i].idle = FALSE]
+        /\ UNCHANGED nextId
 
 Return ==
     /\ \E i \in 1..Len(pool) :
         /\ pool[i].idle = FALSE
         /\ pool' = [pool EXCEPT ![i].idle = TRUE]
+        /\ UNCHANGED nextId
 
 -------------------------
-Init == pool = [i \in 1..PoolSize |-> [idle |-> TRUE]]
 
-Next == Open \/ Close \/ Borrow \/ Return
+Next == Open \/ Borrow \/ Return
 
-Spec == Init /\ [][Next]_pool
+Spec == Init /\ [][Next]_vars
 ====
