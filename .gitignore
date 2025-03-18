@@ -1,0 +1,38 @@
+# TLA+ Toolbox files
+*.toolbox/
+**/*.toolbox/**
+
+# TLA+ model checking results
+states/
+*_model_*/
+**/*_model_*/**
+*.tla.aux
+*.tlaps/
+**/tlaps/
+**/cache/
+
+# TLA+ generated files
+**/snapshots/
+**/__pycache__/
+*.log
+*.out
+*~
+*.zip
+*.old
+*.dot
+*.pdf
+*.pptx
+
+# TLA+ Trace Explorer files
+*TE.tla
+*TE.cfg
+
+# TLA+ checkpoint files
+*.chkpt
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store

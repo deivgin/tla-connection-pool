@@ -11,3 +11,9 @@ The goal of this project is to practice and learn TLA+ specification by validati
 1. Define pool states: available or in-use
 2. Operations: borrow and return
 3. Concurrent access
+
+## Modeling the algorithm
+
+1. What is the state?
+2. What are the events?
+3. What properties are we going to check?
