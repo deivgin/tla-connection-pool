@@ -18,6 +18,7 @@ Init ==
 
 Open ==
     /\ Len(pool) < MaxPoolSize
+    /\ \A i \in 1..Len(pool) : ~pool[i].idle
     /\ pool' = Append(pool, [id |-> nextId, idle |-> TRUE])
     /\ nextId' = nextId + 1
 
@@ -38,4 +39,11 @@ Return ==
 Next == Open \/ Borrow \/ Return
 
 Spec == Init /\ [][Next]_vars
+
+-------------------------
+
+PoolSizeBounds == Len(pool) <= MaxPoolSize
+
+UniqueIds == \A i, j \in 1..Len(pool) : i # j => pool[i].id # pool[j].id
+
 ====
